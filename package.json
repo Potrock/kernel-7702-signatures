@@ -1,0 +1,31 @@
+{
+  "name": "kernel-7702-test",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@privy-io/react-auth": "^2.21.4",
+    "@zerodev/ecdsa-validator": "^5.4.9",
+    "@zerodev/sdk": "^5.4.41",
+    "next": "15.5.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "viem": "^2.34.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
