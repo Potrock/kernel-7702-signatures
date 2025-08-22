@@ -15,7 +15,8 @@ import {
 } from "viem";
 
 const PERMIT2_ADDRESS = "0x000000000022D473030F116dDEE9F6B43aC78BA3";
-const USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+// const USDC_ADDRESS = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const ZORA_ADDRESS = "0x1111111111166b7FE7bd91427724B487980aFc69";
 
 type ZeroXPermit2Eip712 = {
   domain: TypedDataDomain;
@@ -54,7 +55,7 @@ export const ZeroXSwap = () => {
       });
 
       const userOpHash = await kernelClient.sendUserOperation({
-        calls: [{ to: USDC_ADDRESS, data }],
+        calls: [{ to: ZORA_ADDRESS, data }],
       });
 
       const { receipt } = await kernelClient.waitForUserOperationReceipt({
@@ -73,13 +74,16 @@ export const ZeroXSwap = () => {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`/api/swap?wallet=${account.address}`, { cache: "no-store" });
+      const res = await fetch(`/api/swap?wallet=${account.address}`, {
+        cache: "no-store",
+      });
       if (!res.ok) throw new Error(`Quote failed: ${res.status}`);
       const quote: ZeroXQuote = await res.json();
 
       const { eip712 } = quote.permit2;
       const typedTypes = eip712.types as TypedData;
-      const typedPrimary = eip712.primaryType as keyof typeof typedTypes & string;
+      const typedPrimary = eip712.primaryType as keyof typeof typedTypes &
+        string;
       const signature = await kernelClient.signTypedData({
         account,
         domain: eip712.domain,
@@ -150,5 +154,3 @@ export const ZeroXSwap = () => {
     </div>
   );
 };
-
-

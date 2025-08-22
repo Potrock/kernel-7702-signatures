@@ -75,7 +75,10 @@ export function useZeroDevKernel() {
         });
 
         const createdAccount = await createKernelAccount(publicClient, {
-          plugins: { sudo: ecdsaValidator },
+          plugins: { 
+            sudo: ecdsaValidator
+            // Only use sudo (ROOT) validator to avoid SECONDARY validator issues
+          },
           entryPoint,
           kernelVersion,
           address: walletClient.account.address,
