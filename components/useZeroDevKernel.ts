@@ -68,19 +68,11 @@ export function useZeroDevKernel() {
             KernelVersionToAddressesMap[kernelVersion].accountImplementationAddress,
           chainId: chain.id,
         });
-
-        const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
-          signer: walletClient,
-          entryPoint,
-          kernelVersion,
-        });
-
         const createdAccount = await createKernelAccount(publicClient, {
-          plugins: { sudo: ecdsaValidator },
+          eip7702Account: walletClient,
           entryPoint,
           kernelVersion,
-          address: walletClient.account.address,
-          eip7702Auth: authorization,
+          eip7702Auth: authorization
         });
 
         const paymasterClient = paymasterRpc
