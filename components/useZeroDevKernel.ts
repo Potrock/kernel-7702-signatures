@@ -21,6 +21,7 @@ import {
   createKernelAccountClient,
   createZeroDevPaymasterClient,
 } from "@zerodev/sdk";
+import { getUserOperationGasPrice } from "@zerodev/sdk/actions";
 
 const bundlerRpc = process.env.NEXT_PUBLIC_BUNDLER_RPC;
 const paymasterRpc = process.env.NEXT_PUBLIC_PAYMASTER_RPC;
@@ -82,17 +83,28 @@ export function useZeroDevKernel() {
           eip7702Auth: authorization,
         });
 
-        const paymasterClient = createZeroDevPaymasterClient({
-          chain,
-          transport: http(paymasterRpc),
-        });
+        const paymasterClient = paymasterRpc
+          ? createZeroDevPaymasterClient({
+              chain,
+              transport: http(paymasterRpc),
+            })
+          : null;
 
         const createdKernelClient = createKernelAccountClient({
           account: createdAccount,
           chain,
           bundlerTransport: http(bundlerRpc),
-          paymaster: paymasterClient,
+          paymaster: paymasterClient
+            ? {
+                getPaymasterData: async (userOperation) =>
+                  paymasterClient.sponsorUserOperation({ userOperation }),
+              }
+            : undefined,
           client: publicClient,
+          userOperation: {
+            estimateFeesPerGas: async ({ bundlerClient }) =>
+              getUserOperationGasPrice(bundlerClient),
+          },
         });
 
         if (!isMounted) return;
@@ -117,5 +129,4 @@ export function useZeroDevKernel() {
 }
 
 export type UseZeroDevKernelResult = ReturnType<typeof useZeroDevKernel>;
-
 
